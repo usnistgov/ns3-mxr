@@ -34,6 +34,9 @@
 #include "ns3/mac48-address.h"
 #include "ns3/uinteger.h"
 
+
+
+
 namespace ns3
 {
 
@@ -342,7 +345,6 @@ EpcEnbApplication::SendToLteSocket(Ptr<Packet> packet, uint16_t rnti, uint8_t bi
     EpsBearerTag tag(rnti, bid);
     packet->AddPacketTag(tag);
     uint8_t ipType;
-
     packet->CopyData(&ipType, 1);
     ipType = (ipType >> 4) & 0x0f;
 

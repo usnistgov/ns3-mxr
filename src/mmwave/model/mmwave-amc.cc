@@ -130,8 +130,7 @@ MmWaveAmc::GetMcsFromCqi(uint8_t cqi) const
         ++mcs;
     }
 
-    NS_LOG_LOGIC("mcs = " << mcs);
-
+    NS_LOG_LOGIC("mcs = " << +mcs);
     return mcs;
 }
 
@@ -196,7 +195,6 @@ uint8_t
 MmWaveAmc::CreateCqiFeedbackWbTdma(const SpectrumValue& sinr, uint8_t& mcs) const
 {
     NS_LOG_FUNCTION(this);
-
     // produces a single CQI/MCS value
 
     // std::vector<int> cqi;
@@ -301,6 +299,7 @@ MmWaveAmc::CreateCqiFeedbackWbTdma(const SpectrumValue& sinr, uint8_t& mcs) cons
         }
         NS_LOG_DEBUG(this << "\t MCS " << (uint16_t)mcs << "-> CQI " << cqi);
     }
+   
     return cqi;
 }
 

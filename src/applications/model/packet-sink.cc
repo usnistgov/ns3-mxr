@@ -34,6 +34,9 @@
 #include "ns3/trace-source-accessor.h"
 #include "ns3/udp-socket-factory.h"
 #include "ns3/udp-socket.h"
+//TR++
+#include "../../contrib/psc/model/psc-video-streaming.h"
+
 
 namespace ns3
 {
@@ -239,7 +242,21 @@ PacketSink::HandleRead(Ptr<Socket> socket)
             {
                 socket->GetSockName(localAddress);
             }
+            //TR++
+            // MydelayTag tag;
+            // bool found = packet->RemovePacketTag(tag);
+            // if (found)
+            // {
+            // ns3::Time time = tag.GetTime();
+            // uint32_t id = tag.GetId();
+            // std::cout << "Tag found: Time=" << time << ", ID=" << id << std::endl;
+            // }
+            // else
+            // {
+            // std::cout << "Tag not found" << std::endl;
+            // }
             m_rxTrace(packet, from);
+            
             m_rxTraceWithAddresses(packet, from, localAddress);
 
             if (!m_rxTraceWithSeqTsSize.IsEmpty() && m_enableSeqTsSizeHeader)
@@ -265,7 +282,11 @@ PacketSink::PacketReceived(const Ptr<Packet>& p, const Address& from, const Addr
     buffer = itBuffer->second;
     buffer->AddAtEnd(p);
     buffer->PeekHeader(header);
+    //TR++
+    if (header.GetSize() == 0)
+        std::cout << "Problem" << std::endl;
 
+        
     NS_ABORT_IF(header.GetSize() == 0);
 
     while (buffer->GetSize() >= header.GetSize())

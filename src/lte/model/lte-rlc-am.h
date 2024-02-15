@@ -105,6 +105,7 @@ class LteRlcAm : public LteRlc
     //
     std::vector<Ptr<Packet>> m_txedRlcSduBuffer;
     uint32_t m_txedRlcSduBufferSize;
+    TracedCallback<uint32_t,uint32_t,uint32_t,uint32_t> m_rlcStats;
 
   public:
     /**

@@ -82,6 +82,9 @@ SeqTsSizeHeader::Serialize(Buffer::Iterator start) const
 {
     NS_LOG_FUNCTION(this << &start);
     Buffer::Iterator i = start;
+    //TR++
+    if (m_size == 0)
+        std::cout << "Problem" << std::endl;
     i.WriteHtonU64(m_size);
     SeqTsHeader::Serialize(i);
 }
@@ -92,6 +95,9 @@ SeqTsSizeHeader::Deserialize(Buffer::Iterator start)
     NS_LOG_FUNCTION(this << &start);
     Buffer::Iterator i = start;
     m_size = i.ReadNtohU64();
+    //TR++
+     if (m_size == 0)
+        std::cout << "Problem" << std::endl;
     SeqTsHeader::Deserialize(i);
     return GetSerializedSize();
 }

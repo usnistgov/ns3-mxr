@@ -133,6 +133,15 @@ MmWavePhyMacCommon::SetNrNumerology(uint8_t index)
     m_symbolPeriod = Time(m_subframePeriod / m_symbolsPerSlot /
                           m_slotsPerSubframe); // Duration of an OFDM symbol
     m_rbWidth = SUBCARRIERS_PER_RB * subcarrierSpacing;
+
+    // std::cout << "m_symbolPeriod:" << m_symbolPeriod <<  std::endl;
+    // std::cout << "m_subframePeriod:" << m_subframePeriod <<  std::endl;
+    // std::cout << "m_symbolsPerSlot:" << m_symbolsPerSlot <<  std::endl;
+    // std::cout << "m_slotsPerSubframe:" << m_slotsPerSubframe <<  std::endl;
+    // std::cout << "m_symbolPeriod:" << m_symbolPeriod <<  std::endl;
+
+    // std::cout << "Numerology:" << +index <<  std::endl;
+    // std::cout << "m_subframePeriod:" << m_subframePeriod <<  std::endl;
 }
 
 void

@@ -331,8 +331,8 @@ MmWaveSpectrumPhy::ConfigureBeamforming(Ptr<NetDevice> device)
     {
         antenna = mcUeNetDevice->GetAntenna(m_componentCarrierId);
     }
-
-    m_beamforming->SetBeamformingVectorForDevice(device, antenna);
+    
+    m_beamforming->SetBeamformingVectorForDevice(device, antenna);  
 }
 
 void
@@ -623,9 +623,13 @@ MmWaveSpectrumPhy::EndRxData()
                                              harqInfoList);
             itTb->second.m_isCorrupted =
                 m_random->GetValue() > itTb->second.m_outputOfEM->m_tbler ? false : true;
-
+            
             if (itTb->second.m_isCorrupted)
             {
+                // std::cout << Simulator::Now ()<< " Cannot receive because corrupted:" <<  itTb->second.m_outputOfEM->m_tbler << std::endl;
+                
+                
+                //  std::cout << Simulator::Now ()<< "Is corrupted:" << itTb->second.m_isCorrupted << std::endl;
                 NS_LOG_INFO(" RNTI " << itTb->first << " size " << itTb->second.m_expected.m_tbSize
                                      << " mcs " << +itTb->second.m_expected.m_mcs << " bitmap "
                                      << itTb->second.m_expected.m_rbBitmap.size() << " rv "
@@ -663,6 +667,8 @@ MmWaveSpectrumPhy::EndRxData()
                 }
                 else
                 {
+                    // std::cout << "is corrupted" << std::endl;
+                    
                     NS_LOG_INFO("TB failed");
                 }
 
@@ -688,6 +694,7 @@ MmWaveSpectrumPhy::EndRxData()
                 traceParams.m_symStart = itTb->second.m_expected.m_symStart;
                 traceParams.m_numSym = itTb->second.m_expected.m_numSym;
                 traceParams.m_ccId = m_componentCarrierId;
+                
 
                 if (!itTb->second.m_expected.m_isDownlink)
                 {

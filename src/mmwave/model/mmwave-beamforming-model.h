@@ -105,6 +105,9 @@ class MmWaveBeamformingModel : public Object
     Ptr<NetDevice> m_device; //!< pointer to the NetDevice
     Ptr<PhasedArrayModel>
         m_antenna; //!< The antenna of the device on which the beamforming is applied
+    //TR++ Add a new callback to get beamforming results
+    TracedCallback<uint32_t,uint32_t,uint32_t,uint32_t> m_beamformingPerformed;
+    Time m_updatePeriod; //!< defines the refresh period for updating the beam pairs
 };
 
 /**
@@ -206,6 +209,7 @@ class MmWaveSvdBeamforming : public MmWaveBeamformingModel
     double m_tolerance;       //!< Tolerance to numerically approximate the SVD decomposition
     bool m_useCache; //!< Cache the channel matrix whenever possible. NOTE: the SVD decomposition
                      //!< can be extremely computationally expensive, caching is suggested.
+    
 };
 
 /**
@@ -285,7 +289,7 @@ class MmWaveCodebookBeamforming : public MmWaveBeamformingModel
     };
 
     std::map<Ptr<PhasedArrayModel>, Entry> m_codebookIdsCache; //!< stores the selected beam pairs
-    Time m_updatePeriod; //!< defines the refresh period for updating the beam pairs
+    // Time m_updatePeriod; //!< defines the refresh period for updating the beam pairs
 };
 
 } // namespace mmwave

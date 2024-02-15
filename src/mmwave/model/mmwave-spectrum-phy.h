@@ -320,6 +320,7 @@ class MmWaveSpectrumPhy : public SpectrumPhy
 
     TracedCallback<RxPacketTraceParams> m_rxPacketTraceEnb;
     TracedCallback<RxPacketTraceParams> m_rxPacketTraceUe;
+    
 
     SpectrumValue m_sinrPerceived;
 

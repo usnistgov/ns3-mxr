@@ -67,7 +67,16 @@ MmWaveBeamformingModel::GetTypeId()
                                           PointerValue(0),
                                           MakePointerAccessor(&MmWaveBeamformingModel::SetAntenna,
                                                               &MmWaveBeamformingModel::GetAntenna),
-                                          MakePointerChecker<PhasedArrayModel>());
+                                          MakePointerChecker<PhasedArrayModel>())
+                            .AddAttribute("UpdatePeriod",
+                                    "Specify the channel coherence time",
+                                    TimeValue(MilliSeconds(1000)),
+                                    MakeTimeAccessor(&MmWaveBeamformingModel::m_updatePeriod),
+                                    MakeTimeChecker())
+                            .AddTraceSource("BeamformingTrace",
+                            "The beamforming results",
+                            MakeTraceSourceAccessor(&MmWaveBeamformingModel::m_beamformingPerformed),
+                            "ns3::BeamformingEvent::TracedCallback");
     return tid;
 }
 
@@ -168,6 +177,7 @@ MmWaveDftBeamforming::SetBeamformingVectorForDevice(Ptr<NetDevice> otherDevice,
     PhasedArrayModel::ComplexVector otherAntennaWeights =
         otherAntenna->GetBeamformingVector(completeAngleOtherDevice);
     otherAntenna->SetBeamformingVector(otherAntennaWeights);
+
 }
 
 /*----------------------------------------------------------------------------*/
@@ -275,7 +285,7 @@ MmWaveSvdBeamforming::SetBeamformingVectorForDevice(Ptr<NetDevice> otherDevice,
         else
         {
             bfVectors = ComputeBeamformingVectors(channelMatrix);
-
+            
             if (channelMatrix->IsReverse(m_antenna->GetId(), otherAntenna->GetId()))
             {
                 // reverse BF vectors
@@ -465,12 +475,12 @@ MmWaveCodebookBeamforming::GetTypeId()
                           "Pointer to MmWavePhyMacCommon",
                           PointerValue(),
                           MakePointerAccessor(&MmWaveCodebookBeamforming::SetMmWavePhyMacCommon),
-                          MakePointerChecker<MmWavePhyMacCommon>())
-            .AddAttribute("UpdatePeriod",
-                          "Specify the channel coherence time",
-                          TimeValue(MilliSeconds(0.0)),
-                          MakeTimeAccessor(&MmWaveCodebookBeamforming::m_updatePeriod),
-                          MakeTimeChecker());
+                          MakePointerChecker<MmWavePhyMacCommon>());
+            // .AddAttribute("UpdatePeriod",
+            //               "Specify the channel coherence time",
+            //               TimeValue(MilliSeconds(1000)),
+            //               MakeTimeAccessor(&MmWaveCodebookBeamforming::m_updatePeriod),
+            //               MakeTimeChecker());
     return tid;
 }
 
@@ -536,7 +546,6 @@ MmWaveCodebookBeamforming::SetBeamformingVectorForDevice(Ptr<NetDevice> otherDev
 
     uint32_t thisCbIdx;  // index of the codeword selected for this antenna
     uint32_t otherCbIdx; // index of the codeword selected for the other antenna
-
     // check if the best beam pair has already been computed
     bool notFound = true;
     bool update = false;
@@ -570,7 +579,6 @@ MmWaveCodebookBeamforming::SetBeamformingVectorForDevice(Ptr<NetDevice> otherDev
         maxPowers.reserve(powerMatrix.size());
         std::vector<uint32_t> argMaxPowers;
         argMaxPowers.reserve(powerMatrix.size());
-
         for (uint32_t i = 0; i < powerMatrix.size(); i++)
         {
             auto argMaxIt = std::max_element(powerMatrix[i].begin(), powerMatrix[i].end());
@@ -590,8 +598,16 @@ MmWaveCodebookBeamforming::SetBeamformingVectorForDevice(Ptr<NetDevice> otherDev
         Entry newEntry;
         newEntry.thisCbIdx = thisCbIdx;
         newEntry.otherCbIdx = otherCbIdx;
-        newEntry.lastUpdate = Simulator::Now();
+        // newEntry.lastUpdate = Simulator::Now();
+        //TR++ Had to add that in order to avoid cases where the beamforming is triggered after the trace has been updated
+        ns3::Time now = Simulator::Now();
+        double seconds = now.GetSeconds();
+        int roundedSeconds = static_cast<int>(seconds);
+        newEntry.lastUpdate = ns3::Seconds(roundedSeconds);
         m_codebookIdsCache[otherAntenna] = newEntry;
+
+        
+        m_beamformingPerformed(m_device->GetNode()->GetId(),otherDevice->GetNode()->GetId(),thisCbIdx,otherCbIdx);
     }
 
     // set best BF codewords for both devices

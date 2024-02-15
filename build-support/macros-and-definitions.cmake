@@ -429,19 +429,19 @@ macro(process_options)
   endif()
 
   # Set warning level and warning as errors
-  if(${NS3_WARNINGS})
-    if(MSVC)
-      add_compile_options(/W3) # /W4 = -Wall + -Wextra
-      if(${NS3_WARNINGS_AS_ERRORS})
-        add_compile_options(/WX)
-      endif()
-    else()
-      add_compile_options(-Wall) # -Wextra
-      if(${NS3_WARNINGS_AS_ERRORS})
-        add_compile_options(-Werror -Wno-error=deprecated-declarations)
-      endif()
-    endif()
-  endif()
+  # if(${NS3_WARNINGS})
+  #   if(MSVC)
+  #     add_compile_options(/W3) # /W4 = -Wall + -Wextra
+  #     if(${NS3_WARNINGS_AS_ERRORS})
+  #       add_compile_options(/WX)
+  #     endif()
+  #   else()
+  #     add_compile_options(-Wall) # -Wextra
+  #     if(${NS3_WARNINGS_AS_ERRORS})
+  #       add_compile_options(-Werror -Wno-error=deprecated-declarations)
+  #     endif()
+  #   endif()
+  # endif()
 
   include(build-support/custom-modules/ns3-versioning.cmake)
   set(ENABLE_BUILD_VERSION False)

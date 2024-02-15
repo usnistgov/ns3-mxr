@@ -46,6 +46,16 @@ cmake-build-relwithdebinfo/
 cmake-build-minsizerel/
 cmake-build-release/
 
+mcs_figures/
+qdFiltered/
+ResultsWithStats/
+Results/
+Results1Run/
+ResultsGood/
+ResultsPaper/
+ResultsWithoutCoDel/
+ResultsWithTraces/
+
 .vscode/*
 !.vscode/launch.json
 !.vscode/tasks.json

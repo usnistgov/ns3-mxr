@@ -37,6 +37,7 @@
 #include "ns3/simulator.h"
 #include "ns3/string.h"
 
+
 namespace ns3
 {
 
@@ -114,16 +115,18 @@ LteRlcAm::BufferSizeTrace()
     NS_LOG_LOGIC("BufferSizeTrace " << Simulator::Now().GetSeconds() << " " << m_rnti << " "
                                     << m_lcid << " " << m_txonBufferSize);
     // write to file
-    /*if(!m_bufferSizeFile.is_open())
-    {
-      m_bufferSizeFile.open(GetBufferSizeFilename().c_str(), std::ofstream::app);
-      NS_LOG_LOGIC("File opened");
-    }
-    m_bufferSizeFile << Simulator::Now().GetSeconds() << " " << m_rnti << " " << (uint16_t) m_lcid
-    << " " << m_txonBufferSize << std::endl;
-    */
-    m_traceBufferSizeEvent =
-        Simulator::Schedule(MilliSeconds(10), &LteRlcAm::BufferSizeTrace, this);
+    // if(!m_bufferSizeFile.is_open())
+    // {
+    //   m_bufferSizeFile.open(GetBufferSizeFilename().c_str(), std::ofstream::app);
+    //   NS_LOG_LOGIC("File opened");
+    // }
+    // m_bufferSizeFile << Simulator::Now().GetSeconds() << " " << m_rnti << " " << (uint16_t) m_lcid
+    // << "txonBufferSize: " << m_txonBufferSize <<  " m_retxBufferSize:" << m_retxBufferSize <<   " m_txonQueue:"  << m_txonQueue->GetNBytes() << " m_txedBufferSize:"  << m_txedBufferSize   << std::endl;
+    
+    // m_traceBufferSizeEvent =
+    //     Simulator::Schedule(MilliSeconds(1), &LteRlcAm::BufferSizeTrace, this);
+
+    
 }
 
 std::string
@@ -153,7 +156,7 @@ LteRlcAm::GetTypeId(void)
             .AddConstructor<LteRlcAm>()
             .AddAttribute("PollRetransmitTimer",
                           "Value of the t-PollRetransmit timer (See section 7.3 of 3GPP TS 36.322)",
-                          TimeValue(MilliSeconds(20)),
+                          TimeValue(MilliSeconds(5)),
                           MakeTimeAccessor(&LteRlcAm::m_pollRetransmitTimerValue),
                           MakeTimeChecker())
             .AddAttribute("ReorderingTimer",
@@ -187,14 +190,19 @@ LteRlcAm::GetTypeId(void)
                           MakeUintegerChecker<uint32_t>())
             .AddAttribute("EnableAQM",
                           "Enable active queue management (CoDel)",
-                          BooleanValue(false),
+                          BooleanValue(true),
                           MakeBooleanAccessor(&LteRlcAm::m_enableAqm),
                           MakeBooleanChecker())
             .AddAttribute("BufferSizeFilename",
                           "Name of the file where the buffer size will be periodically written.",
                           StringValue("RlcAmBufferSize.txt"),
                           MakeStringAccessor(&LteRlcAm::SetBufferSizeFilename),
-                          MakeStringChecker());
+                          MakeStringChecker())
+            .AddTraceSource("RlcQueueStats",
+                            "The RLC Queue Stats",
+                            MakeTraceSourceAccessor(&LteRlcAm::m_rlcStats),
+                            "ns3::RlcTraceEvent::TracedCallback") 
+                          ;
     return tid;
 }
 
@@ -262,6 +270,17 @@ LteRlcAm::DoTransmitPdcpPdu(Ptr<Packet> p)
             NS_LOG_INFO("Txon Buffer: New packet added");
             m_txonBuffer.push_back(p);
             m_txonBufferSize += p->GetSize();
+    //         if(!m_bufferSizeFile.is_open())
+    // {
+    //   m_bufferSizeFile.open(GetBufferSizeFilename().c_str(), std::ofstream::app);
+    //   NS_LOG_LOGIC("File opened");
+    // }
+    // m_bufferSizeFile << Simulator::Now().GetMilliSeconds() << "RLC: DoTransmitPdcpPdu " << m_rnti << " " << (uint16_t) m_lcid
+    // << " " << m_txonBufferSize << std::endl;
+    //  std::cout << Simulator::Now().GetMilliSeconds() << "RLC: DoTransmitPdcpPdu " << m_rnti << " " << (uint16_t) m_lcid
+    // << " " << m_txonBufferSize << std::endl;
+    
+   
             NS_LOG_LOGIC("NumOfBuffers = " << m_txonBuffer.size());
             NS_LOG_LOGIC("txonBufferSize = " << m_txonBufferSize);
         }
@@ -318,6 +337,17 @@ void
 LteRlcAm::DoNotifyTxOpportunity(LteMacSapUser::TxOpportunityParameters txOpParams)
 {
     NS_LOG_FUNCTION(this << m_rnti << (uint32_t)m_lcid << txOpParams.bytes);
+    // std::cout << "Transmit VTS:" << m_vtS << std::endl;
+   
+    // if(!m_bufferSizeFile.is_open())
+    // {
+    //   m_bufferSizeFile.open(GetBufferSizeFilename().c_str(), std::ofstream::app);
+    //   NS_LOG_LOGIC("File opened");
+    // }
+    // m_bufferSizeFile << Simulator::Now().GetSeconds() << "TX OPPORTUNITY SIZE " << m_rnti << " " << (uint16_t) m_lcid
+    // << " " << txOpParams.bytes << std::endl;
+    
+   
 
     if (txOpParams.bytes < 4)
     {
@@ -778,8 +808,8 @@ LteRlcAm::DoNotifyTxOpportunity(LteMacSapUser::TxOpportunityParameters txOpParam
     }
 
     NS_LOG_LOGIC("SDUs in TxonBuffer  = " << m_txonBuffer.size());
-    NS_LOG_LOGIC("First SDU buffer  = " << *(m_txonBuffer.begin()));
-    NS_LOG_LOGIC("First SDU size    = " << (*(m_txonBuffer.begin()))->GetSize());
+    // NS_LOG_LOGIC("First SDU buffer  = " << *(m_txonBuffer.begin()));
+    // NS_LOG_LOGIC("First SDU size    = " << (*(m_txonBuffer.begin()))->GetSize());
     NS_LOG_LOGIC("Next segment size = " << nextSegmentSize);
     NS_LOG_LOGIC("Remove SDU from TxBuffer");
 
@@ -2067,6 +2097,20 @@ LteRlcAm::DoReceivePdu(LteMacSapUser::ReceivePduParameters rxPduParams)
                             NS_LOG_LOGIC("PDU segment received out of order, discarding");
                         }
                     }
+                }
+                else{
+                    
+                        // out of order segment, discard both received packet and buffered
+                        // it->second.m_byteSegments.clear ();\
+                        //TR++
+                        if (it->second.m_pduComplete == false)
+                        {
+                            m_rxonBuffer.erase(it);
+                            std::cout << "COND NEW: Out of Order PDU segment\n";
+                            NS_LOG_LOGIC("PDU segment received out of order, discarding");
+                        }
+                        //TR==
+                    
                 }
             }
             else

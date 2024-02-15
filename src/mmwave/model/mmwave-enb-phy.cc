@@ -1093,6 +1093,7 @@ MmWaveEnbPhy::StartTti(void)
             MmWaveMacPduTag tag(SfnSf(m_frameNum, m_sfNum, m_slotNum, currTti.m_dci.m_symStart));
             Ptr<Packet> emptyPdu = Create<Packet>();
             MmWaveMacPduHeader header;
+           
             MacSubheader subheader(3, 0); // lcid = 3, size = 0
             header.AddSubheader(subheader);
             emptyPdu->AddHeader(header);
@@ -1124,6 +1125,7 @@ MmWaveEnbPhy::StartTti(void)
         ttiPeriod = NanoSeconds(m_phyMacConfig->GetSymbolPeriod().GetNanoSeconds() *
                                 currTti.m_dci.m_numSym);
         // NS_LOG_DEBUG ("Slot " << (uint8_t)m_slotNum << " scheduled for Uplink");
+      
         m_downlinkSpectrumPhy->AddExpectedTb(currTti.m_dci.m_rnti,
                                              currTti.m_dci.m_ndi,
                                              currTti.m_dci.m_tbSize,
@@ -1171,6 +1173,7 @@ MmWaveEnbPhy::StartTti(void)
     m_phySapUser->SlotIndication(
         SfnSf(m_frameNum, m_sfNum, m_slotNum, currTti.m_dci.m_symStart)); // trigger MAC
 
+  
     Simulator::Schedule(ttiPeriod, &MmWaveEnbPhy::EndTti, this);
 }
 
