@@ -1,0 +1,15 @@
+ParameterName	ParameterValue
+environmentFileName	surgery.amf
+indoorSwitch	1
+numberOfTimeDivisions	150
+referencePoint	[0,0,0]
+selectPlanesByDist	inf
+switchDiffuseComponent	0
+reflectionLoss	15
+totalNumberOfReflections	1
+totalTimeDuration	150
+switchSaveVisualizerFiles	1
+carrierFrequency	60e9
+qdFilesFloatPrecision	6
+useOptimizedOutputToFile	1
+outputFormat	both
