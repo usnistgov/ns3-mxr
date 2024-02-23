@@ -270,15 +270,7 @@ LteRlcAm::DoTransmitPdcpPdu(Ptr<Packet> p)
             NS_LOG_INFO("Txon Buffer: New packet added");
             m_txonBuffer.push_back(p);
             m_txonBufferSize += p->GetSize();
-    //         if(!m_bufferSizeFile.is_open())
-    // {
-    //   m_bufferSizeFile.open(GetBufferSizeFilename().c_str(), std::ofstream::app);
-    //   NS_LOG_LOGIC("File opened");
-    // }
-    // m_bufferSizeFile << Simulator::Now().GetMilliSeconds() << "RLC: DoTransmitPdcpPdu " << m_rnti << " " << (uint16_t) m_lcid
-    // << " " << m_txonBufferSize << std::endl;
-    //  std::cout << Simulator::Now().GetMilliSeconds() << "RLC: DoTransmitPdcpPdu " << m_rnti << " " << (uint16_t) m_lcid
-    // << " " << m_txonBufferSize << std::endl;
+   
     
    
             NS_LOG_LOGIC("NumOfBuffers = " << m_txonBuffer.size());
@@ -337,15 +329,7 @@ void
 LteRlcAm::DoNotifyTxOpportunity(LteMacSapUser::TxOpportunityParameters txOpParams)
 {
     NS_LOG_FUNCTION(this << m_rnti << (uint32_t)m_lcid << txOpParams.bytes);
-    // std::cout << "Transmit VTS:" << m_vtS << std::endl;
-   
-    // if(!m_bufferSizeFile.is_open())
-    // {
-    //   m_bufferSizeFile.open(GetBufferSizeFilename().c_str(), std::ofstream::app);
-    //   NS_LOG_LOGIC("File opened");
-    // }
-    // m_bufferSizeFile << Simulator::Now().GetSeconds() << "TX OPPORTUNITY SIZE " << m_rnti << " " << (uint16_t) m_lcid
-    // << " " << txOpParams.bytes << std::endl;
+
     
    
 
@@ -808,8 +792,8 @@ LteRlcAm::DoNotifyTxOpportunity(LteMacSapUser::TxOpportunityParameters txOpParam
     }
 
     NS_LOG_LOGIC("SDUs in TxonBuffer  = " << m_txonBuffer.size());
-    // NS_LOG_LOGIC("First SDU buffer  = " << *(m_txonBuffer.begin()));
-    // NS_LOG_LOGIC("First SDU size    = " << (*(m_txonBuffer.begin()))->GetSize());
+    NS_LOG_LOGIC("First SDU buffer  = " << *(m_txonBuffer.begin()));
+    NS_LOG_LOGIC("First SDU size    = " << (*(m_txonBuffer.begin()))->GetSize());
     NS_LOG_LOGIC("Next segment size = " << nextSegmentSize);
     NS_LOG_LOGIC("Remove SDU from TxBuffer");
 

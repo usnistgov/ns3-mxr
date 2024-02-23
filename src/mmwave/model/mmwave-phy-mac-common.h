@@ -505,8 +505,6 @@ class MmWavePhyMacCommon : public Object
      */
     inline Time GetSlotPeriod(void)
     {
-        // std::cout << "m_symbolsPerSlot:" << m_symbolsPerSlot <<   "m_symbolPeriod:" << m_symbolsPerSlot << std::endl;
-        // std::cout << "Slot Period:" << NanoSeconds(m_symbolsPerSlot * m_symbolPeriod.GetNanoSeconds()) << std::endl;
         return NanoSeconds(m_symbolsPerSlot * m_symbolPeriod.GetNanoSeconds()); // seconds
         
     }
@@ -516,7 +514,6 @@ class MmWavePhyMacCommon : public Object
      */
     inline uint32_t GetSlotsPerSubframe(void)
     {
-        //  std::cout << "Slot Per Subframe:" <<m_slotsPerSubframe << std::endl;
         return m_slotsPerSubframe;
        
     }

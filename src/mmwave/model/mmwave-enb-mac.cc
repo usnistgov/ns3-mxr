@@ -997,7 +997,7 @@ MmWaveEnbMac::DoSchedConfigIndication(MmWaveMacSchedSapUser::SchedConfigIndParam
                                      << (unsigned int)tbUid << " PDU num " << ipdu << " size "
                                      << (unsigned int)rlcPduInfo[ipdu].m_size);
                         MacSubheader subheader(rlcPduInfo[ipdu].m_lcid, rlcPduInfo[ipdu].m_size);
-                        // std::cout << "Size:" << rlcPduInfo[ipdu].m_size << std::endl;
+                        
                         txOpParams.bytes = (rlcPduInfo[ipdu].m_size) - subheader.GetSize();
                         txOpParams.layer = 0;
                         txOpParams.harqId = tbUid;

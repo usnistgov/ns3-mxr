@@ -108,6 +108,7 @@ class MmWaveBeamformingModel : public Object
     //TR++ Add a new callback to get beamforming results
     TracedCallback<uint32_t,uint32_t,uint32_t,uint32_t> m_beamformingPerformed;
     Time m_updatePeriod; //!< defines the refresh period for updating the beam pairs
+    //TR--
 };
 
 /**

@@ -605,6 +605,7 @@ MmWaveCodebookBeamforming::SetBeamformingVectorForDevice(Ptr<NetDevice> otherDev
         int roundedSeconds = static_cast<int>(seconds);
         newEntry.lastUpdate = ns3::Seconds(roundedSeconds);
         m_codebookIdsCache[otherAntenna] = newEntry;
+        //TR--
 
         
         m_beamformingPerformed(m_device->GetNode()->GetId(),otherDevice->GetNode()->GetId(),thisCbIdx,otherCbIdx);

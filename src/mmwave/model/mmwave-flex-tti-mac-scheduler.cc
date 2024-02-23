@@ -651,7 +651,6 @@ MmWaveFlexTtiMacScheduler::UpdateUlHarqProcessId(uint16_t rnti)
 unsigned
 MmWaveFlexTtiMacScheduler::CalcMinTbSizeNumSym(unsigned mcs, unsigned bufSize, unsigned& tbSize)
 {
-    std::cout << "CalcMinTbSizeNumSym for buffer:" << +bufSize <<  std::endl;
     // Bisection line search is used to find the minimum number of slots (OFDM symbols)
     // needed to encode entire buffer.
     MmWaveMacPduHeader dummyMacHeader;
@@ -667,7 +666,6 @@ MmWaveFlexTtiMacScheduler::CalcMinTbSizeNumSym(unsigned mcs, unsigned bufSize, u
         if (diff == 0)
         {
             tbSize = m_amc->CalculateTbSize(mcs, numSymHigh);
-            std::cout << "END CalcMinTbSizeNumSym:" << tbSize  << std::endl;
             return numSymHigh;
         }
         tbSize = m_amc->CalculateTbSize(mcs, numSymHigh - diff);
@@ -685,7 +683,6 @@ MmWaveFlexTtiMacScheduler::CalcMinTbSizeNumSym(unsigned mcs, unsigned bufSize, u
             if (diff == 0)
             {
                 tbSize = m_amc->CalculateTbSize(mcs, numSymHigh);
-                std::cout << "END CalcMinTbSizeNumSym:" << numSymHigh  << std::endl;
                 return numSymHigh;
             }
             tbSize = m_amc->CalculateTbSize(mcs, numSymLow + diff);
@@ -695,13 +692,11 @@ MmWaveFlexTtiMacScheduler::CalcMinTbSizeNumSym(unsigned mcs, unsigned bufSize, u
             }
             if ((unsigned)tbSize == bufSize)
             {
-                std::cout << "END CalcMinTbSizeNumSym:" << numSymLow  << std::endl;
                 return numSymLow;
             }
         }
     }
     tbSize = m_amc->CalculateTbSize(mcs, numSymHigh);
-    std::cout << "END CalcMinTbSizeNumSym:" << tbSize << "Num Sym:" <<  numSymHigh << std::endl;
     return (unsigned)numSymHigh;
 }
 
@@ -1468,7 +1463,6 @@ MmWaveFlexTtiMacScheduler::DoSchedTriggerReq(
             symIdx += ueSchedInfo.m_dlSymbols;
             dci.m_ndi = 1;
             dci.m_mcs = ueSchedInfo.m_dlMcs;
-            // std::cout << "USE MCS:" << +dci.m_mcs << " NUM SYM: " << +dci.m_numSym << std::endl;
             dci.m_tbSize = m_amc->CalculateTbSize(dci.m_mcs, dci.m_numSym);
             /*while (dci.m_tbSize > m_phyMacConfig->GetMaxTbSize () && dci.m_mcs > 0)
             {
@@ -1487,7 +1481,6 @@ MmWaveFlexTtiMacScheduler::DoSchedTriggerReq(
                                  TtiAllocInfo::CTRL_DATA,
                                  itUeInfo->first);
             ttiInfo.m_dci = dci;
-            // std::cout << "1: TB Size:" << dci.m_tbSize << std::endl;
             NS_LOG_DEBUG("UE" << dci.m_rnti << " gets DL OFDM symbols " << +dci.m_symStart << "-"
                               << +(dci.m_symStart + dci.m_numSym - 1) << " tbs " << dci.m_tbSize
                               << " mcs " << +dci.m_mcs << " harqId " << +dci.m_harqProcess << " rv "
