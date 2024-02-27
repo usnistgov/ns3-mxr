@@ -40,30 +40,6 @@
 #include <ns3/random-variable-stream.h>
 
 namespace ns3 {
-
-  class MydelayTag : public Tag
-{
-  public:
-  static TypeId GetTypeId (void);
-  virtual TypeId GetInstanceTypeId (void) const;
-  
-  MydelayTag ();
-  
-  void SetTime (Time value);
- Time GetTime (void) const;
-  
-  void SetId (uint32_t value);
-  uint32_t GetId (void) const;
-
-  virtual void Serialize (TagBuffer i) const;
-  virtual void Deserialize (TagBuffer i);
-  virtual uint32_t GetSerializedSize (void) const;
-  virtual void Print (std::ostream &os) const;
-
-private:
-  Time m_time;
-  uint32_t m_id;
-};
 namespace psc {
 
 /**

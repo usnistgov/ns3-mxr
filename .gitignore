@@ -55,6 +55,7 @@ ResultsGood/
 ResultsPaper/
 ResultsWithoutCoDel/
 ResultsWithTraces/
+ResultsMXR/
 
 .vscode/*
 !.vscode/launch.json

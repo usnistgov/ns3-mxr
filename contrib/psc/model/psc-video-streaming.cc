@@ -60,7 +60,7 @@ PscVideoStreaming::GetTypeId (void)
     .AddConstructor <PscVideoStreaming> ()
     .AddAttribute ("Distribution",
                    "Video Streaming Model data distribution",
-                   StringValue ("1080p-bright"),
+                   StringValue ("rfh-app-1"),
                    MakeStringAccessor (&PscVideoStreaming::SetDistributionName,
                                        &PscVideoStreaming::GetDistributionName),
                    MakeStringChecker ())
@@ -306,9 +306,6 @@ PscVideoStreaming::Send (void)
     {
       uint32_t pending = m_boostPacketsLeft > 0 ? m_sizeErvBoost->GetInteger () : m_sizeErv->GetInteger ();
       Ptr<Packet> p;
-      //  std::cout << "Generate NEW BURST SIZE:"  <<pending<< std::endl;
-      // std::cout << "m_maxUdpPayloadSize: " << m_maxUdpPayloadSize << std::endl;
-      // std::cout << "pending: " << pending << std::endl;
       while (pending > 0)
         {
         if (m_sequenceNumber == 65534)
@@ -317,24 +314,20 @@ PscVideoStreaming::Send (void)
           if (pending <= stsh.GetSerializedSize ())
             {
               p = Create <Packet> (0); //minimum packet size will be header size
-              // std::cout << "Minimum Packet Size";
+              
                 stsh.SetSeq (++m_sequenceNumber);
               stsh.SetSize (stsh.GetSerializedSize ());
-              // std::cout << "Min";
+             
             }
           else if (pending < m_maxUdpPayloadSize)
             {
               p = Create <Packet> (pending - stsh.GetSerializedSize ());
-              // std::cout << "Pending: " <<pending  <<  std::endl;
-              // std::cout << "Serialize: " <<stsh.GetSerializedSize () <<  std::endl;
-              // std::cout << "Create Size: " <<pending - stsh.GetSerializedSize () <<  std::endl;
-              //  std::cout << "Normal" << std::endl;
+              
                 stsh.SetSeq (++m_sequenceNumber);
               stsh.SetSize (pending);
             }
           else
             {
-              // std::cout << "Frag" << std::endl;
               p = Create <Packet> (m_maxUdpPayloadSize - stsh.GetSerializedSize ());
               stsh.SetSeq (++m_sequenceNumber);
               stsh.SetSize (m_maxUdpPayloadSize);
@@ -342,17 +335,7 @@ PscVideoStreaming::Send (void)
 
           // stsh.SetSeq (++m_sequenceNumber);
           stsh.SetSize (p->GetSize ()+stsh.GetSerializedSize ());
-          // std::cout << "Seq: " << m_sequenceNumber << std::endl;
-          // std::cout << "Packet Size: " <<p->GetSize ()<<  std::endl;
-          // std::cout << "Header Size: " <<p->GetSize ()+stsh.GetSerializedSize ()<<  std::endl;
           
-          //  stsh.SetSize (p->GetSize ());
-        
-        // if (m_sequenceNumber == 65534){
-        //    std::cout << "Packet Size: " <<p->GetSize ()<<  std::endl;
-        //   std::cout << "Header Size: " <<p->GetSize ()+stsh.GetSerializedSize ()<<  std::endl;
-        //   //  NS_ABORT_IF(1==1);
-        // }
           
           Address from;
           Address to;
@@ -361,29 +344,14 @@ PscVideoStreaming::Send (void)
           p->AddHeader (stsh);
 
           if  (m_enableSeqTsSizeHeader){
-            // std::cout << "Create (" << m_sequenceNumber<< ")\n";
             m_txTraceWithSeqTsSize(p, from, to, stsh,p->GetSize ());
           }
           
           
-          // MydelayTag tag;
-          // tag.SetTime (Simulator::Now ());
-          // tag.SetId (m_sequenceNumber);  // Ensure you manage the increment and overflow of id values
-          // p->AddPacketTag (tag);
+         
           m_socket->Send (p);
           m_txTrace (p);
-        // if  (m_enableSeqTsSizeHeader)
-        //   {
-        //     m_txTraceWithSeqTsSize(p, m_receiverAddress, m_receiverAddress, stsh);
-            // SeqTsSizeHeader header;
-            // header.SetSeq(m_sequenceNumber);
-            // header.SetSize(p->GetSize ());
-            // // NS_ABORT_IF(toSend < header.GetSerializedSize());
-           
-            // // Trace before adding header, for consistency with PacketSink
-            // m_txTraceWithSeqTsSize(p, m_receiverAddress, m_receiverAddress, header);
-            // // p->AddHeader(header);
-          // }
+        
           NS_LOG_DEBUG ("Sending packet with size " << p->GetSize () << " Bytes");
 
           if (pending > p->GetSize ())
@@ -440,74 +408,4 @@ PscVideoStreaming::GetDistributionName (void) const
 
 
 } // namespace psc
-//TR++
-
-TypeId
-MydelayTag::GetTypeId (void)
-{
-  static TypeId tid = TypeId ("MydelayTag")
-    .SetParent<Tag> ()
-    .AddConstructor<MydelayTag> ();
-  return tid;
-}
-
-TypeId
-MydelayTag::GetInstanceTypeId (void) const
-{
-  return GetTypeId ();
-}
-
-MydelayTag::MydelayTag ()
-{
-}
-
-void
-MydelayTag::SetTime (Time value)
-{
-  m_time = value;
-}
-
-Time
-MydelayTag::GetTime (void) const
-{
-  return m_time;
-}
-
-void
-MydelayTag::SetId (uint32_t value)
-{
-  m_id = value % UINT32_MAX;  // Handle overflow
-}
-
-uint32_t
-MydelayTag::GetId (void) const
-{
-  return m_id;
-}
-
-void
-MydelayTag::Serialize (TagBuffer i) const
-{
-  i.WriteU64 (m_time.GetNanoSeconds ());
-  i.WriteU32 (m_id);
-}
-
-void
-MydelayTag::Deserialize (TagBuffer i)
-{
-  m_time = NanoSeconds (i.ReadU64 ());
-  m_id = i.ReadU32 ();
-}
-
-uint32_t
-MydelayTag::GetSerializedSize (void) const
-{
-  return 12;
-}
-
-void
-MydelayTag::Print (std::ostream &os) const
-{
-  os << "Time: " << m_time << ", Id: " << m_id;
-}
 } // namespace ns3

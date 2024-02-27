@@ -78,7 +78,7 @@ using namespace psc;
  * inter-packet intervals.
  *
  * There are five parameters to this scenario:
- * - distribution: type of video, which can be '720p-bright' (default), '720p-dark', '1080p-bright', or '1080p-dark'
+ * - distribution: type of video
  * - duration: video streaming duration in seconds (default: 600)
  * - boostLength: length (in packets transmitted) of the initial boost period (default: 50)
  * - boostPercentile: percentile to calculate packet boost [0, 100] (default: 90)

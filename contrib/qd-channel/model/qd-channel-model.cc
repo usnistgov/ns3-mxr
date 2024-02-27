@@ -136,7 +136,7 @@ QdChannelModel::ReadNodesPosition()
     CsvReader csv(posFileName, ',');
     while (csv.FetchNextRow())
     {
-        std::cout << "Read CSV"<< std::endl;
+
         // Ignore blank lines
         if (csv.IsBlankRow())
         {
@@ -185,7 +185,6 @@ QdChannelModel::ReadNodesPosition()
 
         rtIdToNs3IdMap.insert(std::make_pair(id, matchedNodeId));
         m_ns3IdToRtIdMap.insert(std::make_pair(matchedNodeId, id));
-        std::cout << "insert id:" << id << "matchedNodeId" <<matchedNodeId << std::endl;
         NS_LOG_INFO("qdId=" << id << " matches NodeId=" << matchedNodeId
                             << " with position=" << nodePosition);
 
@@ -251,7 +250,6 @@ QdChannelModel::ReadQdFiles(QdChannelModel::RtIdToNs3IdMap_t rtIdToNs3IdMap)
 
     // QdFiles input
     NS_LOG_INFO("m_path + m_scenario = " << m_path + m_scenario);
-    std::cout << m_path + m_scenario <<  "Output/Ns3/QdFiles/*";
     auto qdFileList = GetQdFilesList(m_path + m_scenario + "Output/Ns3/QdFiles/*");
     NS_LOG_DEBUG("qdFileList.size ()=" << qdFileList.size());
 
@@ -266,15 +264,14 @@ QdChannelModel::ReadQdFiles(QdChannelModel::RtIdToNs3IdMap_t rtIdToNs3IdMap)
         int txIndex = fileName.find("Tx");
         int rxIndex = fileName.find("Rx");
         int txtIndex = fileName.find(".txt");
-        std::cout << "filename" << fileName << std::endl;
+        
         
 
         int len{rxIndex - txIndex - 2};
         int id_tx{::atoi(fileName.substr(txIndex + 2, len).c_str())};
         len = txtIndex - rxIndex - 2;
         int id_rx{::atoi(fileName.substr(rxIndex + 2, len).c_str())};
-        std::cout << "id_tx" << id_tx;
-        std::cout << "id_rx" << id_rx;
+        
         NS_ABORT_MSG_IF(rtIdToNs3IdMap.find(id_tx) == rtIdToNs3IdMap.end(), "ID not found for TX!");
         uint32_t nodeIdTx = rtIdToNs3IdMap.find(id_tx)->second;
         NS_ABORT_MSG_IF(rtIdToNs3IdMap.find(id_rx) == rtIdToNs3IdMap.end(), "ID not found for RX!");
@@ -298,7 +295,7 @@ QdChannelModel::ReadQdFiles(QdChannelModel::RtIdToNs3IdMap_t rtIdToNs3IdMap)
         int choppedLine = 0;
         while (choppedLine < chopLine)
         {
-            std::cout << "New MPCs" << line << std::endl;
+           
             int nbLineForMPCs=7;
             int nbLineRead = 0;
             int numMPCs = 0;
@@ -309,7 +306,7 @@ QdChannelModel::ReadQdFiles(QdChannelModel::RtIdToNs3IdMap_t rtIdToNs3IdMap)
             if (numMPCs > 0){
                 while (nbLineRead<nbLineForMPCs){
                     std::getline(qdFile, line);
-                    std::cout << "\tCurrent Line:" << line << std::endl;
+                    
                     nbLineRead++;
                 }
                 choppedLine++;
@@ -411,20 +408,11 @@ QdChannelModel::ReadAllInputFiles()
     ReadParaCfgFile();
     QdChannelModel::RtIdToNs3IdMap_t rtIdToNs3IdMap = ReadNodesPosition();
     ReadQdFiles(rtIdToNs3IdMap);
-    std::cout << "Begin:" <<  m_qdInfoMap.begin()->second.size() << " Timestep:" <<  m_totTimesteps << std::endl;
     // Setup simulation timings assuming constant periodicity
     //TR++
-    // NS_ASSERT_MSG(m_totTimesteps == m_qdInfoMap.begin()->second.size(),
-    //               "m_totTimesteps = " << m_totTimesteps << " != QdFiles size = "
-    //                                   << m_qdInfoMap.begin()->second.size());
-                                      //TR--
-
-    // m_updatePeriod =
-    //     NanoSeconds((double)m_totalTimeDuration.GetNanoSeconds() / (double)m_totTimesteps);
     // Dictate how often the channel is updated
-        m_updatePeriod =
-        Seconds(1);
-        //TR++
+    m_updatePeriod = Seconds(1);
+    //TR++
     NS_LOG_DEBUG("m_totalTimeDuration=" << m_totalTimeDuration.GetSeconds()
                                         << " s"
                                            ", m_updatePeriod="
@@ -520,7 +508,7 @@ QdChannelModel::ChannelMatrixNeedsUpdate(
 
     uint64_t nowTimestep = GetTimestep();
     uint64_t lastChanUpdateTimestep = GetTimestep(channelMatrix->m_generatedTime);
-    // std::cout << "lastChanUpdateTimestep" << channelMatrix->m_generatedTime <<std::endl;
+
     NS_ASSERT_MSG(nowTimestep >= lastChanUpdateTimestep,
                   "Current timestep=" << nowTimestep << ", last channel update timestep="
                                       << lastChanUpdateTimestep);
@@ -532,11 +520,7 @@ QdChannelModel::ChannelMatrixNeedsUpdate(
         NS_LOG_LOGIC("Generation time " << channelMatrix->m_generatedTime.GetNanoSeconds()
                                         << " now " << Simulator::Now().GetNanoSeconds()
                                         << " update needed");
-        update = true;
-       
-        // TR++
-        // std::cout << "Generation time " << channelMatrix->m_generatedTime << " now " << Simulator::Now().GetNanoSeconds() <<std::endl;
-        
+        update = true;    
     }
     else
     {
@@ -592,7 +576,6 @@ QdChannelModel::GetChannel(Ptr<const MobilityModel> aMob,
     {
         NS_LOG_LOGIC("channelMatrix notFound=" << notFound << " || update=" << update);
         channelMatrix = GetNewChannel(aMob, bMob, aAntenna, bAntenna);
-        // std::cout << "notFound " << notFound << "update" << update <<std::endl;
         channelMatrix->m_antennaPair =
             std::make_pair(aAntenna->GetId(),
                            bAntenna->GetId()); // save antenna pair, with the exact order of s and u
@@ -622,13 +605,7 @@ QdChannelModel::GetNewChannel(Ptr<const MobilityModel> aMob,
 
 
     uint32_t timestep = GetTimestep();
-
-    // timestep = GetTimestep();
-    // std::cout << "TimeStep:" << timestep << ",";
-    // if (timestep % 50 == 0) {
-std::cout <<  timestep << ",";
-// }
-    // std::cout << timestep << ",";
+    
 
     uint32_t aId = aMob->GetObject<Node>()->GetId();
     uint32_t bId = bMob->GetObject<Node>()->GetId();
