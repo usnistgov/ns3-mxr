@@ -740,7 +740,6 @@ MmWaveUeMac::DoReceiveControlMessage(Ptr<MmWaveControlMessage> msg)
                     MmWaveMacPduTag tag(SfnSf(frameNum, sfNum, slotNum, dciInfoElem.m_symStart));
                     Ptr<Packet> emptyPdu = Create<Packet>();
                     MmWaveMacPduHeader header;
-                    
                     MacSubheader subheader(3, 0); // lcid = 3, size = 0
                     header.AddSubheader(subheader);
                     emptyPdu->AddHeader(header);

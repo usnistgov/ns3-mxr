@@ -1,65 +1,99 @@
 # 5G mmWave Mixed Reality (MXR) Simulation
-This repository contains the code needed to reproduce the results presented in the [LINKTOCREATE](https://nothinghere): paper.
-In this paper, we simulate a 5G Medical Extended Reality (MXR) setup where a surgeon carries  a headset to perform a surgery on a patient and benefits of the advantages of MXR (ADD examples here). The communication is performed in the Millimeter (mmWave)  band from a Remote Host (RH) to the User Equiment (UE). The traffic employed is detailed in LINK and represents Reduced Function Headset (RFH),
-also known as remote rendering.
 
-This ns-3 implementation uses two repositories:
-* [NYU WIRELESS UniPD ns-3 mmWave Module](https://github.com/nyuwireless-unipd/ns3-mmwave): This is the core version of ns-3 used
-* [UniPD ns-3 QD channel model](https://apps.nsnam.org/app/qd-channel/): This module allows the the ns-3 integration of the Quasi-Deterministic (Q-D) channel model to obtain high-fidelity mmWave channel model. 
+This repository hosts the code required to replicate the findings discussed in our research paper, accessible here: [LINK TO PAPER](https://nothinghere). Our study explores a 5G Medical Extended Reality (MXR) setup, in which a surgeon uses a headset to perform surgeries, leveraging the capabilities of MXR technology . Communication between the Remote Host (RH) and User Equipment (UE) occurs over the Millimeter Wave (mmWave) band. The traffic model used is detailed in [LINK] and represents a Reduced Function Headset (RFH), also known as remote rendering.
 
-We provide additionally the code needed to represents the RFH traffic and in particular a CDF traffic-based generator that helps to accurately represents the RFH traffic.
+This ns-3 implementation uses three repositories:
+* [NYU WIRELESS UniPD ns-3 mmWave Module](https://github.com/nyuwireless-unipd/ns3-mmwave): This repository contains the core version of the ns-3 simulator utilized in our project.
+* [UniPD ns-3 QD Channel Model](https://apps.nsnam.org/app/qd-channel/): This module enables the integration of the Quasi-Deterministic (Q-D) channel model with ns-3, facilitating  high-fidelity mmWave channel representation. The module is located in the `contrib/qd-channel` folder:
+* [PSC NIST](https://github.com/usnistgov/psc-ns3/tree/psc-7.0/src/psc): This implementation utilizes the video streaming capability of the PSC module to generate traffic based on a Cumulative Distribution Function (CDF) traffic generator. It supports the creation of RFH (Reduced Function Headset) traffic patterns for Medical Extended Reality (MXR) applications. The video streaming-focused module is located in the `contrib/plc` folder of this repository.
 
-# The MRX scenario
-The MXR scenario is implementend in the "mxr.cc" file located in the "scratch" folder.
-In this scenario, three nodes are present:
-* A remote host that will send the MXR traffic
-* A 5G BS that will remain static for the entire simulation. We provide 10 scenarios where each scenario varies by the position of the BS. 
-* A 5G UE that will represents the surgeon's head. By default, the surgeon's head focuses on the patient for 100 s, then moves his/her head for 10s to either engage conversation with staffs or check imagery and this for a duratio of  20 seconds, and then comes back to focus on the patient (10s). The surgeon's head moves randomly by +-10cm along the x and y axis. The surgeon's mobility and rotation is the same for all the 10 sceanrios provides.
+## MXR Scenario Implementation
 
-We have reconstructed a 3D model of an authentic operation room of dimensions 5.75 m by 5.48 m by 2.8 m. The picture below describes the 10 different positions of the BS corresponding to the 10 scenarios.
+The MXR scenario, implemented in `mxr.cc` within the `scratch` folder, features three primary nodes:
+- A remote host sending MXR traffic.
+- A static 5G Base Station (BS), with 10 different positional scenarios provided.
+- The 5G UE, simulating the surgeon's movements and gaze patterns during surgery.
 
+The operational room's 3D model, with dimensions 5.75m x 5.48m x 2.8m, serves as the environment for our simulations. Below is a visualization showing the BS's ten different positions across the scenarios, with stars indicating the surgeon's primary focus points.
 
+![A visualization of the different topologies](topologies.png)
 
-The video below shows the mobility of the UE. 
+Additionally, we simulate the dynamic movements of the surgeon's head, represented by the UE's mobility, to reflect realistic surgical behavior. This includes focusing on the patient, interacting with staff, or consulting medical imagery.
+
+### Visualization
+
+Below is a GIF demonstrating the UE's mobility within an MXR scenario:
 
 ![A visualization of an MXR Scenario](scenario.gif)
 
+# How to Generate the Scenarios
 
-# How to generate the scenarios
-The mobility model is generated using [MXR scenario generator](https://nothinghere). 
-Once the scenario are generated, the channel for theses scenarios must be generated using the [NIST Q-D channel realizations software](https://github.com/wigig-tools/qd-realization).
-To do so, place the "surgeryScenarios" folder generated by the MXR scenario generator inside the "src/examples" folder. Then, you need to update the line [here](https://github.com/wigig-tools/qd-realization/blob/1ccf0cb61c1741cc3471db8ec0373c5383da58be/src/main.m#L56C48-L57C1), i.e., inside "src/main.m" file, to reflect the scenario for which you want to generate the channel. Finally. run the "src/main/m" script.
-The channel is now generated and must be imported inside ns-3. 
-To do so, copy-paste the scenarios you've just generated inside the "contrib/psc/qd-channel/model/QD/" folder of this repo. Please note that the 10 scenarios used for the paper are already included in this repo ("MXRPosition1" to "MXR Position 10" folder).
+The process of generating the MXR scenarios involves several steps, utilizing specific tools and software for mobility modeling and channel realization. Follow these steps to generate and prepare the scenarios for simulation:
+
+1. **Mobility Model Generation:** Start by generating the mobility model using the [MXR Scenario Generator](https://nothinghere). This tool helps in creating realistic movement patterns for the scenario.
+
+2. **Channel Realization:** After generating the scenarios, you need to generate the channel realizations for these scenarios using the [NIST Q-D Channel Realizations Software](https://github.com/wigig-tools/qd-realization). Follow these steps:
+   - Place the `surgeryScenarios` folder, created by the MXR Scenario Generator, inside the `src/examples` folder of the Q-D channel realizations software.
+   - Update the specific line in the `src/main.m` file (found [here](https://github.com/wigig-tools/qd-realization/blob/1ccf0cb61c1741cc3471db8ec0373c5383da58be/src/main.m#L56C48-L57C1)) to reflect the scenario for which you are generating the channel.
+   - Execute the `src/main.m` script to generate the channel.
+
+3. **Importing Channel into ns-3:**
+   - Once the channel is generated, import it into ns-3 by copying the generated scenario folders into the `contrib/psc/qd-channel/model/QD/` directory of this repository.
+   - The 10 scenarios used in the paper, labeled from `MXRPosition1` to `MXRPosition10`, are already included in this repository for convenience.
+
+By following these steps, you can generate and prepare the scenarios needed to reproduce the results presented in the paper.
 
 # RFH App
-This repo comes with 11 RFH Apps. 7 of them (from 1 to 7) represents the RFH app presented in [LINKTOCREATE](https://nothinghere). This paper came up with CDF distribution to represent the traffic observed during measurements campaigns for various use-cases. The remaining 4 RFH apps representing higher datarate traffic such as the one used in our paper to represent 4K and 8K traffic and two additional ones for 22 Mbps and 220 Mbps datarate.
+This repository includes 11 RFH Apps. The first seven (from 1 to 7) correspond to the RFH app discussed in LINKTOCREATE. This paper introduced a CDF distribution to model the traffic observed during measurement campaigns for various use-cases. The remaining four RFH apps simulate higher data rate traffic, such as those used in our paper to represent 4K and 8K traffic, in addition to two apps for 22 Mbps and 220 Mbps data rates.
 
 # Usage
-To launch the simulation, use 
+To start the simulation, execute the following command:
 ```bash
 ./ns3 run "mxr"
 ```
-This will use the default parameters.
+This command initiates the simulation with the default settings.
 
 # Parameters
-* "scenario": The name of the folder that will be used and in particular the folder containing the Q-D files generated using the NIST Q-D channel software. Valid entries are [MXRPosition1,MXRPosition2,MXRPosition3,MXRPosition4,MXRPosition5,MXRPosition6,MXRPosition7,MXRPosition8,MXRPosition9,MXRPosition10] Default: MXRPosition1
-* "txPower": The transmit power (in dBm) used by the BS and UE to perform transmission. Default: 10 dBm
-* "noiseFigure": The noise figure (in dBm) for both the BS and UE. Default: 12 dBm
-* "appStart": The application start time (in s). Default: 1 s
-* "appEnd": The application end time (in s). Default: 300 s
-* "resultsFolder": Where to save the output traces. Default: ResultsMXR
-* "rfhTraffic": Is RFH traffic enabled. Default: true
-* "rfhAppId"" The ID of the RFH App. Valid entries are [1,2,3,4,5,6,7,22Mbps,220Mbps,4K,8K]. Default: 1
-* "beamformingInterval": How often is performed the beamforming training between the BS and UE (default 1 s)
-* "codebookFile": The finename of the codebook to use (default: 1x16.txt)
+
+This section outlines the parameters available for simulation configuration:
+
+- **`scenario`**: Specifies the folder containing the Quasi-Deterministic (Q-D) files generated using the NIST Q-D channel software. Valid options include \[MXRPosition1, MXRPosition2, MXRPosition3, MXRPosition4, MXRPosition5, MXRPosition6, MXRPosition7, MXRPosition8, MXRPosition9, MXRPosition10\]. Default is `MXRPosition1`.
+- **`txPower`**: Defines the transmit power in dBm used by the Base Station (BS) and User Equipment (UE) for transmission. Default value is `10 dBm`.
+- **`noiseFigure`**: Sets the noise figure in dB for both the BS and UE. Default is `12 dBm`.
+- **`appStart`**: The start time of the application in seconds. Default is `1 s`.
+- **`appEnd`**: The end time of the application in seconds. Default is `300 s`.
+- **`resultsFolder`**: Specifies the directory where output traces will be saved. Default is `ResultsMXR`.
+- **`rfhTraffic`**: Indicates whether RFH traffic is enabled. Default is `true`.
+- **`rfhAppId`**: The ID of the RFH App being used. Valid entries are \[1, 2, 3, 4, 5, 6, 7, 22Mbps, 220Mbps, 4K, 8K\]. Default is `1`.
+- **`beamformingInterval`**: Defines the frequency of beamforming training between the BS and UE in seconds. The default interval is `1`.
+- **`codebookFile`**: Specifies the filename of the codebook to use. Default is `1x16.txt`.
 
 
 # Output
-The output results will be generated into the "resultsFolder/beamFIntervalX" where results folder corresponds to the "resultsFolder" parameter and X corresponds to the "beamformingInterval" parameter value.
-There are four output generated. The file name of the four output all adopt the same nomenclature:
-MXRPosition1_Beamforming_rfh-app-1_txPower20.0_runNumber1.txt
-scenario_results_rclValue
 
+The simulation generates its results into the directory specified by the `resultsFolder` parameter, further organized into subdirectories named `beamFIntervalX`, where `X` represents the value of the `beamformingInterval` parameter.
+
+## Files Structure
+
+The filenames follow a standard nomenclature: `scenario_resultsType_rfh-app-A_txPowerB_runNumberC.txt`, where:
+- **`scenario`**: Reflects the value of the `scenario` parameter.
+- **`resultsType`**: Indicates the type of results, detailed below.
+- **`A`**: Represents the `rfhAppId` parameter value.
+- **`B`**: Denotes the `txPower` parameter value.
+- **`C`**: Is the `runNumber` parameter value.
+
+## Results Types
+
+The simulation outputs five types of results, each providing insights into different aspects of the scenario:
+
+- **UE**: Logs PHY results at the UE, including the Modulation and Coding Scheme (MCS), number of retransmissions, corruption status, and the Block Error Rate (BLER) of any received packet.
+
+- **Throughput**: Records the throughput and Packet Delivery Ratio (PDR).
+
+- **SNR**: Documents the Reference Signal Received Power (RSRP) and Signal-to-Interference-plus-Noise Ratio (SINR) as reported by the UE to the BS.
+
+- **Delay**: Captures the delay of application traffic received at the UE.
+
+- **Beamforming**: Chronicles the beamforming training results between the BS and the UE.
 
 

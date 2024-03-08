@@ -14,6 +14,8 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * Modified by: NIST // Contributions may not be subject to US copyright.
  */
 
 #include "ns3/mmwave-beamforming-model.h"
@@ -69,7 +71,7 @@ MmWaveBeamformingModel::GetTypeId()
                                                               &MmWaveBeamformingModel::GetAntenna),
                                           MakePointerChecker<PhasedArrayModel>())
                             .AddAttribute("UpdatePeriod",
-                                    "Specify the channel coherence time",
+                                    "How often is the beamforming performed",
                                     TimeValue(MilliSeconds(1000)),
                                     MakeTimeAccessor(&MmWaveBeamformingModel::m_updatePeriod),
                                     MakeTimeChecker())
@@ -177,7 +179,6 @@ MmWaveDftBeamforming::SetBeamformingVectorForDevice(Ptr<NetDevice> otherDevice,
     PhasedArrayModel::ComplexVector otherAntennaWeights =
         otherAntenna->GetBeamformingVector(completeAngleOtherDevice);
     otherAntenna->SetBeamformingVector(otherAntennaWeights);
-
 }
 
 /*----------------------------------------------------------------------------*/
@@ -476,11 +477,6 @@ MmWaveCodebookBeamforming::GetTypeId()
                           PointerValue(),
                           MakePointerAccessor(&MmWaveCodebookBeamforming::SetMmWavePhyMacCommon),
                           MakePointerChecker<MmWavePhyMacCommon>());
-            // .AddAttribute("UpdatePeriod",
-            //               "Specify the channel coherence time",
-            //               TimeValue(MilliSeconds(1000)),
-            //               MakeTimeAccessor(&MmWaveCodebookBeamforming::m_updatePeriod),
-            //               MakeTimeChecker());
     return tid;
 }
 
@@ -546,6 +542,7 @@ MmWaveCodebookBeamforming::SetBeamformingVectorForDevice(Ptr<NetDevice> otherDev
 
     uint32_t thisCbIdx;  // index of the codeword selected for this antenna
     uint32_t otherCbIdx; // index of the codeword selected for the other antenna
+    
     // check if the best beam pair has already been computed
     bool notFound = true;
     bool update = false;
@@ -579,6 +576,7 @@ MmWaveCodebookBeamforming::SetBeamformingVectorForDevice(Ptr<NetDevice> otherDev
         maxPowers.reserve(powerMatrix.size());
         std::vector<uint32_t> argMaxPowers;
         argMaxPowers.reserve(powerMatrix.size());
+
         for (uint32_t i = 0; i < powerMatrix.size(); i++)
         {
             auto argMaxIt = std::max_element(powerMatrix[i].begin(), powerMatrix[i].end());
@@ -598,14 +596,13 @@ MmWaveCodebookBeamforming::SetBeamformingVectorForDevice(Ptr<NetDevice> otherDev
         Entry newEntry;
         newEntry.thisCbIdx = thisCbIdx;
         newEntry.otherCbIdx = otherCbIdx;
-        // newEntry.lastUpdate = Simulator::Now();
-        //TR++ Had to add that in order to avoid cases where the beamforming is triggered after the trace has been updated
+        
+        // Added to avoid cases where the beamforming is triggered after the trace has been updated
         ns3::Time now = Simulator::Now();
         double seconds = now.GetSeconds();
         int roundedSeconds = static_cast<int>(seconds);
         newEntry.lastUpdate = ns3::Seconds(roundedSeconds);
         m_codebookIdsCache[otherAntenna] = newEntry;
-        //TR--
 
         
         m_beamformingPerformed(m_device->GetNode()->GetId(),otherDevice->GetNode()->GetId(),thisCbIdx,otherCbIdx);

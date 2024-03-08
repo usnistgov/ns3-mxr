@@ -133,7 +133,6 @@ MmWavePhyMacCommon::SetNrNumerology(uint8_t index)
     m_symbolPeriod = Time(m_subframePeriod / m_symbolsPerSlot /
                           m_slotsPerSubframe); // Duration of an OFDM symbol
     m_rbWidth = SUBCARRIERS_PER_RB * subcarrierSpacing;
-
 }
 
 void

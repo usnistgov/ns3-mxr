@@ -24,6 +24,8 @@
  *
  * Modified by: Tommaso Zugno <tommasozugno@gmail.com>
  *                 Integration of Carrier Aggregation for the mmWave module
+ * 
+ * Modified by: NIST // Contributions may not be subject to US copyright.
  */
 
 #include "ns3/lte-rlc-am.h"
@@ -115,18 +117,16 @@ LteRlcAm::BufferSizeTrace()
     NS_LOG_LOGIC("BufferSizeTrace " << Simulator::Now().GetSeconds() << " " << m_rnti << " "
                                     << m_lcid << " " << m_txonBufferSize);
     // write to file
-    // if(!m_bufferSizeFile.is_open())
-    // {
-    //   m_bufferSizeFile.open(GetBufferSizeFilename().c_str(), std::ofstream::app);
-    //   NS_LOG_LOGIC("File opened");
-    // }
-    // m_bufferSizeFile << Simulator::Now().GetSeconds() << " " << m_rnti << " " << (uint16_t) m_lcid
-    // << "txonBufferSize: " << m_txonBufferSize <<  " m_retxBufferSize:" << m_retxBufferSize <<   " m_txonQueue:"  << m_txonQueue->GetNBytes() << " m_txedBufferSize:"  << m_txedBufferSize   << std::endl;
-    
-    // m_traceBufferSizeEvent =
-    //     Simulator::Schedule(MilliSeconds(1), &LteRlcAm::BufferSizeTrace, this);
-
-    
+    /*if(!m_bufferSizeFile.is_open())
+    {
+      m_bufferSizeFile.open(GetBufferSizeFilename().c_str(), std::ofstream::app);
+      NS_LOG_LOGIC("File opened");
+    }
+    m_bufferSizeFile << Simulator::Now().GetSeconds() << " " << m_rnti << " " << (uint16_t) m_lcid
+    << " " << m_txonBufferSize << std::endl;
+    */
+    m_traceBufferSizeEvent =
+        Simulator::Schedule(MilliSeconds(10), &LteRlcAm::BufferSizeTrace, this);    
 }
 
 std::string
@@ -198,10 +198,6 @@ LteRlcAm::GetTypeId(void)
                           StringValue("RlcAmBufferSize.txt"),
                           MakeStringAccessor(&LteRlcAm::SetBufferSizeFilename),
                           MakeStringChecker())
-            .AddTraceSource("RlcQueueStats",
-                            "The RLC Queue Stats",
-                            MakeTraceSourceAccessor(&LteRlcAm::m_rlcStats),
-                            "ns3::RlcTraceEvent::TracedCallback") 
                           ;
     return tid;
 }
@@ -270,9 +266,6 @@ LteRlcAm::DoTransmitPdcpPdu(Ptr<Packet> p)
             NS_LOG_INFO("Txon Buffer: New packet added");
             m_txonBuffer.push_back(p);
             m_txonBufferSize += p->GetSize();
-   
-    
-   
             NS_LOG_LOGIC("NumOfBuffers = " << m_txonBuffer.size());
             NS_LOG_LOGIC("txonBufferSize = " << m_txonBufferSize);
         }
@@ -329,9 +322,6 @@ void
 LteRlcAm::DoNotifyTxOpportunity(LteMacSapUser::TxOpportunityParameters txOpParams)
 {
     NS_LOG_FUNCTION(this << m_rnti << (uint32_t)m_lcid << txOpParams.bytes);
-
-    
-   
 
     if (txOpParams.bytes < 4)
     {
@@ -2074,7 +2064,6 @@ LteRlcAm::DoReceivePdu(LteMacSapUser::ReceivePduParameters rxPduParams)
                     else
                     {
                         // out of order segment, discard both received packet and buffered
-                        // it->second.m_byteSegments.clear ();
                         if (it->second.m_pduComplete == false)
                         {
                             m_rxonBuffer.erase(it);

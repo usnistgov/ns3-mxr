@@ -177,7 +177,7 @@ main (int argc, char *argv[])
   streamingServer->SetAttribute ("BoostLengthPacketCount", UintegerValue (boostLength));
   streamingServer->SetAttribute ("BoostPercentile", DoubleValue (boostPercentile));
 
-  streamingServer->SetAttribute ("MaxUdpDatagramSize", UintegerValue (maxUdpDatagramSize));
+  streamingServer->SetAttribute ("MaxUdpPayloadSize", UintegerValue (maxUdpDatagramSize));
 
   nodes.Get (0)->AddApplication (streamingServer);
 

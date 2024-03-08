@@ -60,7 +60,7 @@ PscVideoStreaming::GetTypeId (void)
     .AddConstructor <PscVideoStreaming> ()
     .AddAttribute ("Distribution",
                    "Video Streaming Model data distribution",
-                   StringValue ("rfh-app-1"),
+                   StringValue ("1080p-bright"),
                    MakeStringAccessor (&PscVideoStreaming::SetDistributionName,
                                        &PscVideoStreaming::GetDistributionName),
                    MakeStringChecker ())
@@ -193,7 +193,6 @@ PscVideoStreaming::LoadCdfs (void)
 
   double boostPctSize = (1 - m_boostPercentile / 100);
 
-  //TR++ Change to check distrib
   m_sizeErv = CreateObjectWithAttributes<EmpiricalRandomVariable> ("Interpolate", BooleanValue (true));
   m_intervalErv = CreateObjectWithAttributes<EmpiricalRandomVariable> ("Interpolate", BooleanValue (true));
   m_sizeErvBoost = CreateObjectWithAttributes<EmpiricalRandomVariable> ("Interpolate", BooleanValue (true));
@@ -309,34 +308,26 @@ PscVideoStreaming::Send (void)
       while (pending > 0)
         {
         if (m_sequenceNumber == 65534)
-          m_sequenceNumber =1;
+          m_sequenceNumber = 1;
           SeqTsSizeHeader stsh;
           if (pending <= stsh.GetSerializedSize ())
             {
-              p = Create <Packet> (0); //minimum packet size will be header size
-              
-                stsh.SetSeq (++m_sequenceNumber);
+              p = Create <Packet> (0); //minimum packet size will be header size             
               stsh.SetSize (stsh.GetSerializedSize ());
-             
             }
           else if (pending < m_maxUdpPayloadSize)
             {
-              p = Create <Packet> (pending - stsh.GetSerializedSize ());
-              
-                stsh.SetSeq (++m_sequenceNumber);
+              p = Create <Packet> (pending - stsh.GetSerializedSize ());             
               stsh.SetSize (pending);
             }
           else
             {
               p = Create <Packet> (m_maxUdpPayloadSize - stsh.GetSerializedSize ());
-              stsh.SetSeq (++m_sequenceNumber);
               stsh.SetSize (m_maxUdpPayloadSize);
             }
-
-          // stsh.SetSeq (++m_sequenceNumber);
+          stsh.SetSeq (++m_sequenceNumber);
           stsh.SetSize (p->GetSize ()+stsh.GetSerializedSize ());
-          
-          
+            
           Address from;
           Address to;
           m_socket->GetSockName(from);
@@ -347,8 +338,6 @@ PscVideoStreaming::Send (void)
             m_txTraceWithSeqTsSize(p, from, to, stsh,p->GetSize ());
           }
           
-          
-         
           m_socket->Send (p);
           m_txTrace (p);
         
@@ -356,12 +345,10 @@ PscVideoStreaming::Send (void)
 
           if (pending > p->GetSize ())
             {
-              pending -= p->GetSize ();
-              
+              pending -= p->GetSize ();  
             }
           else
             {
-             
               pending = 0;
             }
         }
@@ -404,8 +391,6 @@ PscVideoStreaming::GetDistributionName (void) const
 
   return m_distributionName;
 }
-
-
 
 } // namespace psc
 } // namespace ns3

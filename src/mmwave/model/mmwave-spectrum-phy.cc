@@ -663,7 +663,6 @@ MmWaveSpectrumPhy::EndRxData()
                 }
                 else
                 {
-                    
                     NS_LOG_INFO("TB failed");
                 }
 
@@ -689,7 +688,6 @@ MmWaveSpectrumPhy::EndRxData()
                 traceParams.m_symStart = itTb->second.m_expected.m_symStart;
                 traceParams.m_numSym = itTb->second.m_expected.m_numSym;
                 traceParams.m_ccId = m_componentCarrierId;
-                
 
                 if (!itTb->second.m_expected.m_isDownlink)
                 {

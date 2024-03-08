@@ -342,9 +342,7 @@ MmWaveEesmErrorModel::GetTbBitDecodificationStats(const SpectrumValue& sinr,
     else
     {
         errorRate = MappingSinrBler(SINR, mcs_eq, K);
-    }
-
-   
+    }  
 
     NS_LOG_DEBUG("Calculated Error rate " << errorRate);
     NS_ASSERT(GetMcsEcrTable() != nullptr);

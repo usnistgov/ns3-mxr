@@ -344,7 +344,6 @@ main(int argc, char* argv[])
     std::string distribution;
     if (rfhTraffic)
         distribution = rfhPrefix + rfhAppId;
-    std::cout << "distribution" << distribution;
     RngSeedManager::SetSeed(seedNumber);
     RngSeedManager::SetRun(runNumber);
 
@@ -355,6 +354,7 @@ main(int argc, char* argv[])
     Config::SetDefault("ns3::MmWaveHelper::RlcAmEnabled", BooleanValue(rlcAmEnabled));
     Config::SetDefault("ns3::MmWaveHelper::HarqEnabled", BooleanValue(harqEnabled));
     Config::SetDefault("ns3::MmWaveFlexTtiMacScheduler::HarqEnabled", BooleanValue(harqEnabled));
+    Config::SetDefault("ns3::MmWaveFlexTtiMacScheduler::CqiTimerThreshold", UintegerValue(1000));
     Config::SetDefault("ns3::MmWaveHelper::UseIdealRrc", BooleanValue(false));
 
     // Node creation for UE (User Equipment) and eNB (Evolved Node B, base station)
@@ -474,7 +474,9 @@ main(int argc, char* argv[])
     Ptr<PscVideoStreaming> streamingServer = CreateObject<PscVideoStreaming>();
     streamingServer->SetAttribute("ReceiverAddress", AddressValue(ueIpAddr.GetLocal()));
     streamingServer->SetAttribute("ReceiverPort", UintegerValue(5554));
-    streamingServer->SetAttribute("Distribution", StringValue(distribution));
+    std::string packetSizeFilePath = "contrib/psc/examples/mxr_cdf/cdfPacketSize-" + distribution + ".txt";
+    std::string interarrivalFilePath = "contrib/psc/examples/mxr_cdf/cdfInterarrival-" + distribution + ".txt";
+    streamingServer->ReadCustomDistribution(packetSizeFilePath, interarrivalFilePath);
     streamingServer->SetAttribute("BoostLengthPacketCount", UintegerValue(boostLength));
     streamingServer->SetAttribute("BoostPercentile", DoubleValue(boostPercentile));
 

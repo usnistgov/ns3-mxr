@@ -130,7 +130,8 @@ MmWaveAmc::GetMcsFromCqi(uint8_t cqi) const
         ++mcs;
     }
 
-    NS_LOG_LOGIC("mcs = " << +mcs);
+    NS_LOG_LOGIC("mcs = " << mcs);
+    
     return mcs;
 }
 

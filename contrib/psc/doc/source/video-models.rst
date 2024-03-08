@@ -8,7 +8,7 @@ Video Streaming Model
 The class ``ns3::psc::PscVideoStreaming`` implements the model of a live video
 streaming application over UDP. The class
 ``ns3::psc::PscVideoStreamingDistributions`` provides the data distributions
-for some examples of video streaming with specific parameters.
+for some examples of video streaming with specific parameters in the folder `examples/video_cdf`. Additionally, the data distributions for the MXR traffic has been added within the `examples/mxr_cdf` folder.
 
 -----------------
 Model Description

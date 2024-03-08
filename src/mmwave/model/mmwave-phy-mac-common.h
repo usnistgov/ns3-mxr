@@ -505,8 +505,7 @@ class MmWavePhyMacCommon : public Object
      */
     inline Time GetSlotPeriod(void)
     {
-        return NanoSeconds(m_symbolsPerSlot * m_symbolPeriod.GetNanoSeconds()); // seconds
-        
+        return NanoSeconds(m_symbolsPerSlot * m_symbolPeriod.GetNanoSeconds()); // seconds 
     }
 
     /**
@@ -514,8 +513,7 @@ class MmWavePhyMacCommon : public Object
      */
     inline uint32_t GetSlotsPerSubframe(void)
     {
-        return m_slotsPerSubframe;
-       
+        return m_slotsPerSubframe;  
     }
 
     /**
