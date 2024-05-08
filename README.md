@@ -1,6 +1,6 @@
 # 5G mmWave Mixed Reality (MXR) Simulation
 
-This repository hosts the code required to replicate the findings discussed in our research paper, accessible here: [LINK TO PAPER](https://nothinghere). Our study explores a 5G Medical Extended Reality (MXR) setup, in which a surgeon uses a headset to perform surgeries, leveraging the capabilities of MXR technology . Communication between the Remote Host (RH) and User Equipment (UE) occurs over the Millimeter Wave (mmWave) band. The traffic model used is detailed in [LINK] and represents a Reduced Function Headset (RFH), also known as remote rendering.
+This repository hosts the code required to replicate the findings discussed in our research paper entitled: "A Simulation Study of mmWave 5G-enabled Medical Extended Reality (MXR)" by Tanguy Ropitault, Yongkang Liu, Richard Rouil, and Mohamad Omar Al Kalaa. Our study explores a 5G Medical Extended Reality (MXR) setup, in which a surgeon uses a headset to perform surgeries, leveraging the capabilities of MXR technology . Communication between the Remote Host (RH) and User Equipment (UE) occurs over the Millimeter Wave (mmWave) band. The traffic model used is detailed in [this paper]{https://ieeexplore.ieee.org/document/10460522} and represents a Reduced Function Headset (RFH), also known as remote rendering.
 
 This ns-3 implementation uses three repositories:
 * [NYU WIRELESS UniPD ns-3 mmWave Module](https://github.com/nyuwireless-unipd/ns3-mmwave): This repository contains the core version of the ns-3 simulator utilized in our project.
@@ -30,7 +30,7 @@ Below is a GIF demonstrating the UE's mobility within an MXR scenario:
 
 The process of generating the MXR scenarios involves several steps, utilizing specific tools and software for mobility modeling and channel realization. Follow these steps to generate and prepare the scenarios for simulation:
 
-1. **Mobility Model Generation:** Start by generating the mobility model using the [MXR Scenario Generator](https://nothinghere). This tool helps in creating realistic movement patterns for the scenario.
+1. **Mobility Model Generation:** Start by generating the mobility model using the [MXR Scenario Generator](https://gitlab.nist.gov/gitlab/tnr1/surgeryscenarios). This tool helps in creating realistic movement patterns for the scenario.
 
 2. **Channel Realization:** After generating the scenarios, you need to generate the channel realizations for these scenarios using the [NIST Q-D Channel Realizations Software](https://github.com/wigig-tools/qd-realization). Follow these steps:
    - Place the `surgeryScenarios` folder, created by the MXR Scenario Generator, inside the `src/examples` folder of the Q-D channel realizations software.
