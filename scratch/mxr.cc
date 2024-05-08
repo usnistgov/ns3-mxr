@@ -18,11 +18,11 @@
  */
 
 /**
- * This example shows how to simulate a MXS scenario using full stack simulation using the
+ * This example shows how to simulate a MXR scenario using full stack simulation using the
  * QdChannelModel.
  * The simulation involves two nodes (1 AP and one STA). The STA is the only node moving.
  * They communicates through a wireless channel at 60 GHz with a bandwidth
- * of about 400 MHz.
+ * of about 200 MHz.
  */
 
 #include "ns3/applications-module.h"
