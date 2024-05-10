@@ -1,6 +1,6 @@
 # 5G mmWave Mixed Reality (MXR) Simulation
 
-This repository hosts the code required to replicate the findings discussed in our research paper entitled: "A Simulation Study of mmWave 5G-enabled Medical Extended Reality (MXR)" by Tanguy Ropitault, Yongkang Liu, Richard Rouil, and Mohamad Omar Al Kalaa. Our study explores a 5G Medical Extended Reality (MXR) setup, in which a surgeon uses a headset to perform surgeries, leveraging the capabilities of MXR technology . Communication between the Remote Host (RH) and User Equipment (UE) occurs over the Millimeter Wave (mmWave) band. The traffic model used is detailed in [this paper]{https://ieeexplore.ieee.org/document/10460522} and represents a Reduced Function Headset (RFH), also known as remote rendering.
+This repository hosts the code required to replicate the findings discussed in our research paper entitled: "A Simulation Study of mmWave 5G-enabled Medical Extended Reality (MXR)" by Tanguy Ropitault, Yongkang Liu, Richard Rouil, and Mohamad Omar Al Kalaa. Our study explores a 5G Medical Extended Reality (MXR) setup, in which a surgeon uses a headset to perform surgeries, leveraging the capabilities of MXR technology. Communication between the Remote Host (RH) and User Equipment (UE) occurs over the Millimeter Wave (mmWave) band. The traffic model used is detailed in [this paper](https://ieeexplore.ieee.org/document/10460522) and represents a Reduced Function Headset (RFH), also known as remote rendering.
 
 This ns-3 implementation uses three repositories:
 * [NYU WIRELESS UniPD ns-3 mmWave Module](https://github.com/nyuwireless-unipd/ns3-mmwave): This repository contains the core version of the ns-3 simulator utilized in our project.
@@ -14,7 +14,7 @@ The MXR scenario, implemented in `mxr.cc` within the `scratch` folder, features 
 - A static 5G Base Station (BS), with 10 different positional scenarios provided.
 - The 5G UE, simulating the surgeon's movements and gaze patterns during surgery.
 
-The operational room's 3D model, with dimensions 5.75m x 5.48m x 2.8m, serves as the environment for our simulations. Below is a visualization showing the BS's ten different positions across the scenarios, with stars indicating the surgeon's primary focus points.
+The operational room's 3D model, with dimensions 5.75 m x 5.48 m x 2.8 m, serves as the environment for our simulations. Below is a visualization showing the BS's ten different positions across the scenarios, with stars indicating the surgeon's primary focus points.
 
 ![A visualization of the different topologies](topologies.png)
 
@@ -44,7 +44,7 @@ The process of generating the MXR scenarios involves several steps, utilizing sp
 By following these steps, you can generate and prepare the scenarios needed to reproduce the results presented in the paper.
 
 # RFH App
-This repository includes 11 RFH Apps. The first seven (from 1 to 7) correspond to the RFH app discussed in LINKTOCREATE. This paper introduced a CDF distribution to model the traffic observed during measurement campaigns for various use-cases. The remaining four RFH apps simulate higher data rate traffic, such as those used in our paper to represent 4K and 8K traffic, in addition to two apps for 22 Mbps and 220 Mbps data rates.
+This repository includes 11 RFH Apps. The first seven (from 1 to 7) correspond to the RFH app discussed in [this paper](https://ieeexplore.ieee.org/document/10460522). This paper introduced a CDF distribution to model the traffic observed during measurement campaigns for various use-cases. The remaining four RFH apps simulate higher data rate traffic, such as those used in our paper to represent 4K and 8K traffic, in addition to two apps for 22 Mb/s and 220 Mb/s data rates.
 
 # Usage
 To start the simulation, execute the following command:

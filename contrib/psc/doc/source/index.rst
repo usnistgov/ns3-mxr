@@ -30,9 +30,8 @@ The full PSC module can be found on GitHub at the following URL:
 This standalone version is a trimmed-down iteration of the original module, focusing solely on video streaming features. It has been created to facilitate easier integration and usage within ns-3 projects that require only video streaming capabilities.
 Additionally, it includes within the `examples/mxr_cdf` directory the distribution files for **Reduced Function Headset (RFH) Medical Extended Reality (MXR) applications**. 
 
-For further details on the applications and their usage in this context, please refer to the following article:
+For further details on the applications and their usage in this context, please refer to the paper entitled "A Simulation Study of mmWave 5G-enabled Medical Extended Reality (MXR)" by Tanguy Ropitault, Yongkang Liu, Richard Rouil, and Mohamad Omar Al Kalaa.
 
-- `RFH MXR Applications in ns-3 <http://example.com/article>`_
 
 
 .. toctree::
