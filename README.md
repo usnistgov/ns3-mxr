@@ -30,7 +30,7 @@ Below is a GIF demonstrating the UE's mobility within an MXR scenario:
 
 The process of generating the MXR scenarios involves several steps, utilizing specific tools and software for mobility modeling and channel realization. Follow these steps to generate and prepare the scenarios for simulation:
 
-1. **Mobility Model Generation:** Start by generating the mobility model using the [MXR Scenario Generator](https://gitlab.nist.gov/gitlab/tnr1/surgeryscenarios). This tool helps in creating realistic movement patterns for the scenario.
+1. **Mobility Model Generation:** Start by generating the mobility model using the [MXR Scenario Generator](https://github.com/usnistgov/mxr-scenario-generator). This tool helps in creating realistic movement patterns for the scenario.
 
 2. **Channel Realization:** After generating the scenarios, you need to generate the channel realizations for these scenarios using the [NIST Q-D Channel Realizations Software](https://github.com/wigig-tools/qd-realization). Follow these steps:
    - Place the `surgeryScenarios` folder, created by the MXR Scenario Generator, inside the `src/examples` folder of the Q-D channel realizations software.
